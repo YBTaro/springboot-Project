@@ -1,5 +1,7 @@
 package com.taro.springbootmall.model;
 
+import com.taro.springbootmall.constant.ProductCategory;
+
 import java.util.Date;
 
 public class Product {
@@ -9,7 +11,7 @@ public class Product {
     private int price;
     private int stock;
     private String imgUrl;
-    private String category;
+    ProductCategory category;
     private Date createTime;
     private Date updateTime;
 
@@ -61,11 +63,11 @@ public class Product {
         this.imgUrl = imgUrl;
     }
 
-    public String getCategory() {
+    public ProductCategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(ProductCategory category) {
         this.category = category;
     }
 
