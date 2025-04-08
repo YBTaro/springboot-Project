@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    ProductDao productDao;
+    private ProductDao productDao;
     @Override
     public Product getProductById(int id) {
         return productDao.getProductById(id);
@@ -19,5 +19,11 @@ public class ProductServiceImpl implements ProductService {
     public int createProduct(ProductRequest product){
         return productDao.createProduct(product);
     }
+
+    @Override
+    public void updateProduct(int id, ProductRequest productRequest) {
+        productDao.updateProduct(id, productRequest);
+    }
+
 
 }
