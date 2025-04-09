@@ -1,6 +1,7 @@
 package com.taro.springbootmall.dao.impl;
 
 import com.taro.springbootmall.dao.ProductDao;
+import com.taro.springbootmall.dto.ProductQueryParams;
 import com.taro.springbootmall.dto.ProductRequest;
 import com.taro.springbootmall.model.Product;
 import com.taro.springbootmall.rowmapper.ProductRowMapper;
@@ -32,6 +33,25 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public List<Product> getAllProduct(ProductQueryParams productQueryParams) {
+        String sql = "SELECT product_id, product_name, category, img_url, price, stock, description, create_date, last_modified_date FROM product WHERE 1=1";
+        Map<String, Object> params = new HashMap<String, Object>();
+        if(productQueryParams.getCategory() != null) {
+            sql += " AND category = :category";
+            params.put("category", productQueryParams.getCategory().name());
+        }
+        if(productQueryParams.getSearch() != null) {
+            sql += " AND product_name LIKE :name";
+            params.put("name", "%"+productQueryParams.getSearch()+"%");
+
+        }
+        System.out.println(sql);
+        List<Product> productList = jdbcTemplate.query(sql, params, new ProductRowMapper());
+        return productList;
+
+    }
+
+    @Override
     public int createProduct(ProductRequest product) {
         String sql = "INSERT INTO product(product_name, category, img_url, price, stock, description, create_date, last_modified_date) VALUES (:product_name, :category, :img_url, :price, :stock, :description, :create_date, :last_modified_date)";
 
@@ -52,6 +72,26 @@ public class ProductDaoImpl implements ProductDao {
         jdbcTemplate.update(sql, new MapSqlParameterSource(params), keyHolder);
 
         return keyHolder.getKey().intValue();
+    }
+
+    @Override
+    public void createProducts(List<ProductRequest> productList) {
+        String sql = "INSERT INTO product(product_name, category, img_url, price, stock, description, create_date, last_modified_date) VALUES (:product_name, :category, :img_url, :price, :stock, :description, :create_date, :last_modified_date)";
+        MapSqlParameterSource[] params = new MapSqlParameterSource[productList.size()];
+        for(int i = 0; i < productList.size(); i++){
+            params[i] = new MapSqlParameterSource();
+            params[i].addValue("product_name", productList.get(i).getName());
+            params[i].addValue("category", productList.get(i).getCategory().name());
+            params[i].addValue("img_url", productList.get(i).getImgUrl());
+            params[i].addValue("price", productList.get(i).getPrice());
+            params[i].addValue("stock", productList.get(i).getStock());
+            params[i].addValue("description", productList.get(i).getDesc());
+            Date now = new Date();
+            params[i].addValue("create_date", now);
+            params[i].addValue("last_modified_date", now);
+
+        }
+        jdbcTemplate.batchUpdate(sql, params);
     }
 
     @Override
