@@ -7,6 +7,7 @@ import com.taro.springbootmall.model.Product;
 import java.util.List;
 
 public interface ProductService {
+    int countProducts(ProductQueryParams params);
     Product getProductById(int id);
     List<Product> getAllProduct(ProductQueryParams productQueryParams);
     int createProduct(ProductRequest product);

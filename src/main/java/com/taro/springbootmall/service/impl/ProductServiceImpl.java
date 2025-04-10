@@ -14,6 +14,12 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDao productDao;
+
+    @Override
+    public int countProducts(ProductQueryParams params) {
+        return productDao.countProducts(params);
+    }
+
     @Override
     public Product getProductById(int id) {
         return productDao.getProductById(id);

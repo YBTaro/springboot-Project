@@ -5,15 +5,19 @@ import com.taro.springbootmall.dto.ProductQueryParams;
 import com.taro.springbootmall.dto.ProductRequest;
 import com.taro.springbootmall.model.Product;
 import com.taro.springbootmall.service.ProductService;
+import com.taro.springbootmall.util.Page;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Validated
 @RestController
 public class ProductController {
     @Autowired
@@ -30,17 +34,30 @@ public class ProductController {
     }
 
     @GetMapping("products")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             @RequestParam(required = false) ProductCategory category,
-            @RequestParam(required = false) String search) {
+            @RequestParam(required = false) String search,
+            // sorting
+            @RequestParam(defaultValue = "create_date") String orderBy,
+            @RequestParam(defaultValue = "desc") String sort,
+            //Pagination
+            @RequestParam(defaultValue = "5") @Max(1000) @Min(0) int limit,
+            @RequestParam(defaultValue = "0") @Min(0) int offset) {
         ProductQueryParams productQueryParams = new ProductQueryParams();
         productQueryParams.setCategory(category);
         productQueryParams.setSearch(search);
-//        System.out.println(productCategory.name());
-        System.out.println(search);
+        productQueryParams.setOrderBy(orderBy);
+        productQueryParams.setSort(sort);
+        productQueryParams.setLimit(limit);
+        productQueryParams.setOffset(offset);
         List<Product> productList = productService.getAllProduct(productQueryParams);
 
-        return ResponseEntity.ok(productList);
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setList(productList);
+        page.setTotal(productService.countProducts(productQueryParams));
+        return ResponseEntity.ok(page);
 
     }
 
