@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }else if(!user.getPassword().equals(userLoginRequest.getPassword())){
             String hashedPassword = DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes(StandardCharsets.UTF_8));
-            if(!hashedPassword.equals(userLoginRequest.getPassword())){
+            if(!hashedPassword.equals(user.getPassword())){
                 logger.warn("The password {} is not match.", userLoginRequest.getPassword());
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
