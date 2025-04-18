@@ -6,4 +6,5 @@ import com.taro.springbootmall.model.User;
 public interface UserDao {
     public int createUser(UserRegisterRequest userRegisterRequest);
     public User getUserById(int id);
+    public User getUserByEmail(String email);
 }

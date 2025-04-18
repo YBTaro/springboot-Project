@@ -1,9 +1,12 @@
 package com.taro.springbootmall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 
 public class User {
     private int id;
+    @JsonIgnore
     private String password;
     private String email;
     private Date createdDate;

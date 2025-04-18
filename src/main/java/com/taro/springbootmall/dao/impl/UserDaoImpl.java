@@ -45,4 +45,14 @@ public class UserDaoImpl implements UserDao {
         if (list != null && list.size() > 0) { return list.get(0); }
         return null;
     }
+
+    @Override
+    public User getUserByEmail(String email) {
+        String sql = "SELECT user_id, email, password, created_date, last_modified_date  FROM user WHERE email = :email";
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email);
+        List<User> list = jdbcTemplate.query(sql, params, new UserRowMapper());
+        if(list != null && list.size() > 0) { return list.get(0); }
+        return null;
+    }
 }
