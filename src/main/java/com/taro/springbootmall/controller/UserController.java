@@ -1,5 +1,6 @@
 package com.taro.springbootmall.controller;
 
+import com.taro.springbootmall.dto.UserLoginRequest;
 import com.taro.springbootmall.dto.UserRegisterRequest;
 import com.taro.springbootmall.model.User;
 import com.taro.springbootmall.service.UserService;
@@ -21,6 +22,12 @@ public class UserController {
     public ResponseEntity<User> register(@RequestBody @Valid UserRegisterRequest userRegisterRequest) {
         int user_id = userService.register(userRegisterRequest);
         User user = userService.getUserById(user_id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @PostMapping("/users/login")
+    public ResponseEntity<User> login(@RequestBody @Valid UserLoginRequest userLoginRequest) {
+        User user = userService.login(userLoginRequest);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }
