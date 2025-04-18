@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 public class ProductRequest {
     @NotNull
     private String name;
-    @NotNull
     private String desc;
     @NotNull
     private int price;
